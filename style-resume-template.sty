@@ -1,18 +1,17 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{style-template-cv-picture}[2026/06/08 Abstracted CV Style]
+\ProvidesPackage{style-resume-template}[2026/04/17 Abstracted Resume Style]
 
 % --- Core Packages ---
 \RequirePackage[
     ignoreheadfoot, % Set margins without considering header and footer
-    % top=0.5in, bottom=0.5in, left=0.5in, right=0.5in
-    top=1in, bottom=1in, left=1in, right=1in
+    top=0.5in, bottom=0.5in, left=0.5in, right=0.5in
 ]{geometry}
 \RequirePackage{titlesec} % For customizing section titles
 \RequirePackage{tabularx} % For tables
 \RequirePackage{array}
 \RequirePackage[dvipsnames]{xcolor} % For text colors
 \RequirePackage{enumitem} % For list customization
-\RequirePackage{fontawesome5} % For icons
+\RequirePackage{fontawesome5} % For visual icons
 \RequirePackage{accsupp} % For ATS text replacement
 \RequirePackage{amsmath}
 \RequirePackage{calc}
@@ -21,7 +20,6 @@
 \RequirePackage{ifthen}
 \RequirePackage{needspace} % Prevent page breaks after titles
 \RequirePackage{iftex}
-\RequirePackage{graphicx}
 
 % --- ATS Parsable PDF Setup ---
 \ifPDFTeX
@@ -29,7 +27,7 @@
     \pdfgentounicode=1
     \RequirePackage[utf8]{inputenc}
     % \RequirePackage{lmodern}
-    \RequirePackage{newtxtext,newtxmath} % Loads Times New Roman for text 
+    \RequirePackage{newtxtext,newtxmath} % Loads Times New Roman for text & math
 \fi
 
 % --- Colors & Links ---
@@ -41,7 +39,7 @@
 
 % Custom link command with an external arrow icon
 \let\hrefWithoutArrow\href
-% \renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }}}
 
 % --- Global Formatting ---
 \pagestyle{empty} % Remove page numbers
@@ -56,8 +54,8 @@
 \titlespacing{\section}{0pt}{0.15cm}{0.2cm}
 
 % --- Content Environments (Hidden from main file) ---
-\newenvironment{cvheader}{
-    \setlength{\topsep}{0pt}\par\kern\topsep\raggedright\linespread{1.5}
+\newenvironment{resumeheader}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\linespread{1.5}
 }{\par\kern\topsep}
 
 \renewcommand\labelitemi{$\circ$} % Custom bullet points
@@ -89,12 +87,8 @@
 }
 
 % ==============================================================================
-% SEMANTIC DATA COMMANDS (To be used in cv.tex)
+% SEMANTIC DATA COMMANDS (To be used in resume.tex)
 % ==============================================================================
-
-% Profile Picture Variable Setup
-\newcommand{\cvpic}{}
-\newcommand{\cvProfilePic}[1]{\renewcommand{\cvpic}{#1}}
 
 % Header Variables
 \newcommand{\contactItem}[3]{%
@@ -113,25 +107,19 @@
 }
 
 \newcommand{\makeheader}[2]{
-    \begin{cvheader}
-        \begin{minipage}[c]{\textwidth-3.5cm}
-            \raggedright
-            \textbf{\fontsize{24 pt}{24 pt}\selectfont #1}\\[0.3cm]
-            \fontsize{9.5}{11}\selectfont #2
-        \end{minipage}%
-        \hfill
-        \begin{minipage}[c]{3cm}
-            \raggedleft
-            \ifthenelse{\equal{\cvpic}{}}{}{\includegraphics[width=3cm]{\cvpic}}
-        \end{minipage}
-    \end{cvheader}
+    \begin{resumeheader}
+        \textbf{\fontsize{24 pt}{24 pt}\selectfont #1}
+        \vspace{0.3 cm}
+        
+        \fontsize{9.5}{11}\selectfont #2
+    \end{resumeheader}
     \vspace{0.2cm}
 }
 
 \newboolean{isFirstContactItem}
 % #1: Name, #2: Location URL, #3: Location Name, #4: Email, #5: Phone, #6: LinkedIn URL, #7: LinkedIn Name, #8: GitHub URL, #9: GitHub Name
-\newcommand{\cvHeader}[9]{
-    \hypersetup{pdftitle={CV of #1}, pdfauthor={#1}}%
+\newcommand{\resumeHeader}[9]{
+    \hypersetup{pdftitle={Resume of #1}, pdfauthor={#1}}%
     \setboolean{isFirstContactItem}{true}%
     \makeheader{#1}{%
         \ifthenelse{\equal{#3}{}}{}{%
@@ -163,53 +151,15 @@
 }
 
 % #1: Summary Text
-\newcommand{\cvSummary}[1]{
+\newcommand{\resumeSummary}[1]{
     \begin{onecolentry}
         #1
     \end{onecolentry}
     \vspace{0.2 cm}
 }
 
-% #1: Degree, #2: University, #3: Date, #4: Location, #5: Bullet Points
-\newcommand{\cvEducation}[5]{
-    \begin{twocolentry}{\textit{#3}}
-        \textbf{#1}
-    \end{twocolentry}
-    \begin{twocolentry}{\textit{#4}}
-        \textit{#2}
-    \end{twocolentry}
-    \vspace{0.10 cm}
-    \begin{onecolentry}
-        \begin{highlights} #5 \end{highlights}
-    \end{onecolentry}
-    \vspace{0.2 cm}
-}
-
-% #1: Category, #2: Skills List
-\newcommand{\cvSkill}[2]{
-    \begin{onecolentry}
-        \textbf{#1:} #2
-    \end{onecolentry}
-    \vspace{0.05 cm}
-}
-
-% #1: Title, #2: Tech Stack, #3: Date, #4: Subtitle/Type, #5: Bullet Points
-\newcommand{\cvProject}[5]{
-    \begin{twocolentry}{\textit{#3}}
-        \textbf{#1}
-    \end{twocolentry}
-    \begin{twocolentry}{\textit{#4}}
-        \textit{#2}
-    \end{twocolentry}
-    \vspace{0.10 cm}
-    \begin{onecolentry}
-        \begin{highlights} #5 \end{highlights}
-    \end{onecolentry}
-    \vspace{0.2 cm}
-}
-
-% #1: Title, #2: Organization, #3: Date, #4: Location, #5: Bullet Points
-\newcommand{\cvExperience}[5]{
+% #1: Degree, #2: University, #3: Date, #4: Date, #5: Bullet Points
+\newcommand{\resumeEducation}[5]{
     \begin{twocolentry}{\textit{#3}}
         \textbf{#1}
     \end{twocolentry}
@@ -224,7 +174,7 @@
 }
 
 % #1: Title, #2: Authors, #3: Date, #4: Venue, #5: URL Text, #6: URL
-\newcommand{\cvPublication}[6]{
+\newcommand{\resumePublication}[6]{
     \begin{twocolentry}{\textit{#3}}
         \parbox[t]{0.75\textwidth}{\textbf{#1}}
     \end{twocolentry}
@@ -236,19 +186,16 @@
     \vspace{0.2 cm}
 }
 
-% #1: Cert Name, #2: Issuer, #3: Date, #4: Link Text, #5: Link URL
-\newcommand{\cvCert}[5]{
-    \begin{twocolentry}{\textit{Issued #3}}
-        \textbf{#1}
-    \end{twocolentry}
-    \begin{twocolentry}{\textit{\href{#5}{#4}}}
-        \textit{#2}
-    \end{twocolentry}
-    \vspace{0.2 cm}
+% #1: Category, #2: Skills List
+\newcommand{\resumeSkill}[2]{
+    \begin{onecolentry}
+        \textbf{#1:} #2
+    \end{onecolentry}
+    \vspace{0.05 cm}
 }
 
-% #1: Position, #2: Date, #3: Event/Group, #4: Organization, #5: Bullet Points
-\newcommand{\cvExtracurricularActivity}[5]{
+% #1: Title, #2: Date, #3: Technology, #4: Subtitle/Type, #5: Bullet Points
+\newcommand{\resumeProject}[5]{
     \begin{twocolentry}{\textit{#2}}
         \textbf{#1}
     \end{twocolentry}
@@ -262,14 +209,43 @@
     \vspace{0.2 cm}
 }
 
-% #1: Name, #2: Position, #3: Department, #4: Organization, #5: Email, #6: Phone
-\newcommand{\cvReference}[6]{
+% #1: Title, #2: Date, #3: Organization, #4: Location, #5: Bullet Points
+\newcommand{\resumeExperience}[5]{
+    \begin{twocolentry}{\textit{#2}}
+        \textbf{#1}
+    \end{twocolentry}
+    \begin{twocolentry}{\textit{#4}}
+        \textit{#3}
+    \end{twocolentry}
+    \vspace{0.10 cm}
     \begin{onecolentry}
-        \textbf{#1} \\
-        \textit{#2} \\
-        \ifthenelse{\equal{#3}{}}{}{#3 \\}#4 \\
-        \ifthenelse{\equal{#5}{}}{}{\href{mailto:#5}{#5}\ifthenelse{\equal{#6}{}}{}{\\}}%
-        \ifthenelse{\equal{#6}{}}{}{#6}
+        \begin{highlights} #5 \end{highlights}
     \end{onecolentry}
+    \vspace{0.2 cm}
+}
+
+% #1: Position, #2: Date, #3: Event/Group, #4: Organization, #5: Bullet Points
+\newcommand{\resumeExtracurricularActivity}[5]{
+    \begin{twocolentry}{\textit{#2}}
+        \textbf{#1}
+    \end{twocolentry}
+    \begin{twocolentry}{\textit{#4}}
+        \textit{#3}
+    \end{twocolentry}
+    \vspace{0.10 cm}
+    \begin{onecolentry}
+        \begin{highlights} #5 \end{highlights}
+    \end{onecolentry}
+    \vspace{0.2 cm}
+}
+
+% #1: Cert Name, #2: Issuer, #3: Date, #4: Link Text, #5: Link URL
+\newcommand{\resumeCert}[5]{
+    \begin{twocolentry}{\textit{Issued #3}}
+        \textbf{#1}
+    \end{twocolentry}
+    \begin{twocolentry}{\textit{\href{#5}{#4}}}
+        \textit{#2}
+    \end{twocolentry}
     \vspace{0.2 cm}
 }
