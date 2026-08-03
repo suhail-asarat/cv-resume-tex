@@ -1,0 +1,164 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{style-template-cv}
+
+\begin{document}
+
+% ==============================================================================
+% CONTACT INFORMATION & TECHNICAL LINKS
+% ==============================================================================
+% #1: Name, #2: Location URL, #3: Location Name, #4: Email, #5: Phone, #6: LinkedIn URL, #7: LinkedIn Name, #8: GitHub URL, #9: GitHub Name
+
+\cvHeader
+    {Your Name}
+    {https://map.location}
+    {City}
+    {email@example.com}
+    {+1 234 567 890}
+    {https://linkedin.com/in/yourprofile}
+    {linkedin.com/in/yourprofile}
+    {https://github.com/yourgithub}
+    {github.com/yourgithub}
+
+% --- Commented Example: Adding additional header links (e.g., Portfolio) ---
+% Because \cvHeader already takes the maximum of 9 arguments, you can add 
+% extra links like a Portfolio by uncommenting and modifying the example 
+% block at the end of the \cvHeader definition in cv.sty.
+
+% ==============================================================================
+% TECHNICAL PROFILE / PROFESSIONAL SUMMARY (OPTIONAL)
+% ==============================================================================
+% #1: Summary Text
+
+\section{Summary}
+\cvSummary{Provide a brief 2-3 sentence summary highlighting your core technical skills, research interests, and what you aim to achieve in your academic or professional career.}
+
+% ==============================================================================
+% EDUCATION
+% ==============================================================================
+% #1: Degree, #2: University, #3: Date, #4: Location, #5: Bullet Points
+
+\section{Education}
+\cvEducation
+    {Degree Name in Major}
+    {University or Institution Name}
+    {Month, Year – Month, Year}
+    {City, Country}
+    {
+        \item \textbf{Relevant Coursework:} Course 1, Course 2, Course 3, Course 4
+        \item \textbf{Thesis:} Title of your thesis or research focus
+    }
+
+% ==============================================================================
+% CORE COMPETENCIES & TECHNICAL SKILLS
+% ==============================================================================
+% #1: Category, #2: Skills List
+
+\section{Technical Skills}
+\cvSkill{Programming Languages}{Skill 1, Skill 2, Skill 3, Skill 4, Skill 5}
+\cvSkill{Frameworks \& Libraries}{Skill 1, Skill 2, Skill 3, Skill 4, Skill 5}
+\cvSkill{Tools \& Technologies}{Skill 1, Skill 2, Skill 3, Skill 4, Skill 5}
+
+% ==============================================================================
+% TECHNICAL PROJECTS / RESEARCH EXPERIENCE
+% ==============================================================================
+% #1: Title, #2: Tech Stack, #3: Date, #4: Subtitle/Type, #5: Bullet Points
+
+\section{Projects / Research Experience}
+\cvProject
+    {Research or Project Title}
+    {Technology 1, Technology 2}
+    {Month, Year – Month, Year}
+    {Research Lab or Project Type}
+    {
+        \item Action verb + what you researched or built + how you did it + quantifiable outcome.
+        \item Highlight specific methodologies, algorithms, or technical problems solved.
+    }
+
+% ==============================================================================
+% PROFESSIONAL EXPERIENCE / INTERNSHIPS (OPTIONAL)
+% ==============================================================================
+% #1: Title, #2: Organization, #3: Date, #4: Location, #5: Bullet Points
+
+\section{Experience / Internships}
+\cvExperience
+    {Role Title}
+    {Company / Organization}
+    {Month, Year – Month, Year}
+    {City, Country}
+    {
+        \item Action verb + what you did + how you did it + quantifiable result or impact.
+        \item Highlight a specific technical implementation detail or problem solved.
+        \item Another bullet point highlighting a key contribution or feature.
+    }
+
+% ==============================================================================
+% PUBLICATIONS & PRESENTATIONS (OPTIONAL)
+% ==============================================================================
+% #1: Title, #2: Authors, #3: Date, #4: Venue, #5: URL Text, #6: URL
+
+\section{Publications}
+\cvPublication
+    {Title of the Publication or Presentation}
+    {\textbf{Your Name}, Co-author 1, Co-author 2}
+    {Month, Year}
+    {Name of the Journal, Conference, or Institution}
+    {DOI/Link}
+    {https://doi.org/10.xxxx/xxxxx}
+
+% ==============================================================================
+% AWARDS, HONORS & CERTIFICATIONS (OPTIONAL)
+% ==============================================================================
+% #1: Cert Name, #2: Issuer, #3: Date, #4: Link Text, #5: Link URL
+
+\section{Certifications}
+\cvCert
+    {Award or Certification Name}
+    {Certificate Issuer}
+    {Month, Year}
+    {Verify Credential}
+    {https://link-to-credential.com}
+
+% ==============================================================================
+% EXTRACURRICULAR ACTIVITIES / LEADERSHIP (OPTIONAL)
+% ==============================================================================
+% #1: Position, #2: Date, #3: Event/Group, #4: Organization, #5: Bullet Points
+
+\section{Extracurricular Activities}
+\cvExtracurricularActivity
+    {Role or Position Title}
+    {Month, Year – Month, Year}
+    {Event or Sub-group}
+    {Club / Organization}
+    {
+        \item Describe your involvement, responsibilities, and achievements.
+        \item Highlight specific events organized or participated in.
+    }
+
+% ==============================================================================
+% REFERENCES
+% ==============================================================================
+% #1: Name, #2: Position, #3: Department, #4: Organization, #5: Email, #6: Phone
+
+\section{References}
+\setcolumnwidth{0.5\textwidth}
+\begin{paracol}{2}
+\cvReference
+    {Reference Name 1}
+    {Title / Position}
+    {Department Name}
+    {Organization Name}
+    {email1@example.com}
+    {+1 234 567 890}
+
+\switchcolumn
+
+\cvReference
+    {Reference Name 2}
+    {Title / Position}
+    {Department Name}
+    {Organization Name}
+    {email2@example.com}
+    {+1 234 567 890}
+\end{paracol}
+
+\end{document}

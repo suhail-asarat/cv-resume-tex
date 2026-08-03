@@ -1,0 +1,276 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{style-template-cv-picture}[2026/06/08 Abstracted CV Style]
+
+% --- Core Packages ---
+\RequirePackage[
+    ignoreheadfoot, % Set margins without considering header and footer
+    % top=0.5in, bottom=0.5in, left=0.5in, right=0.5in
+    top=1in, bottom=1in, left=1in, right=1in
+]{geometry}
+\RequirePackage{titlesec} % For customizing section titles
+\RequirePackage{tabularx} % For tables
+\RequirePackage{array}
+\RequirePackage[dvipsnames]{xcolor} % For text colors
+\RequirePackage{enumitem} % For list customization
+\RequirePackage{fontawesome5} % For icons
+\RequirePackage{accsupp} % For ATS text replacement
+\RequirePackage{amsmath}
+\RequirePackage{calc}
+\RequirePackage{changepage} % For single column entries
+\RequirePackage{paracol} % For two column layouts
+\RequirePackage{ifthen}
+\RequirePackage{needspace} % Prevent page breaks after titles
+\RequirePackage{iftex}
+\RequirePackage{graphicx}
+
+% --- ATS Parsable PDF Setup ---
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \RequirePackage[utf8]{inputenc}
+    % \RequirePackage{lmodern}
+    \RequirePackage{newtxtext,newtxmath} % Loads Times New Roman for text 
+\fi
+
+% --- Colors & Links ---
+\definecolor{primaryColor}{RGB}{0, 79, 144}
+\RequirePackage[
+    colorlinks=true,
+    urlcolor=primaryColor,
+    pdftitle={CV},
+    pdfauthor={Your Name}
+]{hyperref}
+
+% Custom link command with an external arrow icon
+\let\hrefWithoutArrow\href
+% \renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+% --- Global Formatting ---
+\pagestyle{empty} % Remove page numbers
+\setcounter{secnumdepth}{0} % No section numbers
+\setlength{\parindent}{0pt} % Remove indentation
+\setlength{\topskip}{0pt}
+\setlength{\columnsep}{0cm} % Column separation for paracol
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt}
+
+% --- Section Styling ---
+\titleformat{\section}{\needspace{4\baselineskip}\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule]
+\titlespacing{\section}{0pt}{0.15cm}{0.2cm}
+
+% --- Content Environments (Hidden from main file) ---
+\newenvironment{cvheader}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\raggedright\linespread{1.5}
+}{\par\kern\topsep}
+
+\renewcommand\labelitemi{$\circ$} % Custom bullet points
+
+\newenvironment{highlights}{
+    \begin{itemize}[topsep=0.05cm, parsep=0.03cm, partopsep=0pt, itemsep=0pt, leftmargin=0.4cm+10pt]
+}{\end{itemize}}
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{0.2cm+0.00001cm}{0.2cm+0.00001cm}
+}{\end{adjustwidth}}
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 6cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+% --- ATS-Friendly Icon Wrapper ---
+\newcommand{\atsIcon}[2]{%
+    \BeginAccSupp{method=pdfstringdef,unicode,ActualText=#1}%
+    #2%
+    \EndAccSupp{}%
+}
+
+% ==============================================================================
+% SEMANTIC DATA COMMANDS (To be used in cv.tex)
+% ==============================================================================
+
+% Profile Picture Variable Setup
+\newcommand{\cvpic}{}
+\newcommand{\cvProfilePic}[1]{\renewcommand{\cvpic}{#1}}
+
+% Header Variables
+\newcommand{\contactItem}[3]{%
+    \mbox{\hrefWithoutArrow{#1}{\color{black}{\footnotesize #2}\hspace*{0.10cm}#3}}%
+}
+
+% Header Variables - with hidden ATS labels
+% \newcommand{\contactItem}[4]{%
+%     \mbox{\hrefWithoutArrow{#1}{\color{black}{\footnotesize #2}\hspace*{0.10cm}#3\phantom{\footnotesize#4}}}%
+% }
+
+\newsavebox\ANDbox
+\sbox\ANDbox{}
+\newcommand{\contactSeparator}{%
+    \kern 0.15cm\unskip\cleaders\copy\ANDbox\hskip\wd\ANDbox\ignorespaces\kern 0.15cm%
+}
+
+\newcommand{\makeheader}[2]{
+    \begin{cvheader}
+        \begin{minipage}[c]{\textwidth-3.5cm}
+            \raggedright
+            \textbf{\fontsize{24 pt}{24 pt}\selectfont #1}\\[0.3cm]
+            \fontsize{9.5}{11}\selectfont #2
+        \end{minipage}%
+        \hfill
+        \begin{minipage}[c]{3cm}
+            \raggedleft
+            \ifthenelse{\equal{\cvpic}{}}{}{\includegraphics[width=3cm]{\cvpic}}
+        \end{minipage}
+    \end{cvheader}
+    \vspace{0.2cm}
+}
+
+\newboolean{isFirstContactItem}
+% #1: Name, #2: Location URL, #3: Location Name, #4: Email, #5: Phone, #6: LinkedIn URL, #7: LinkedIn Name, #8: GitHub URL, #9: GitHub Name
+\newcommand{\cvHeader}[9]{
+    \setboolean{isFirstContactItem}{true}%
+    \makeheader{#1}{%
+        \ifthenelse{\equal{#3}{}}{}{%
+            \ifthenelse{\boolean{isFirstContactItem}}{\setboolean{isFirstContactItem}{false}}{\contactSeparator}%
+            \contactItem{#2}{\atsIcon{Location: }{\faMapMarker*}}{#3}%
+        }%
+        \ifthenelse{\equal{#4}{}}{}{%
+            \ifthenelse{\boolean{isFirstContactItem}}{\setboolean{isFirstContactItem}{false}}{\contactSeparator}%
+            \contactItem{mailto:#4}{\atsIcon{Email: }{\faEnvelope[regular]}}{#4}%
+        }%
+        \ifthenelse{\equal{#5}{}}{}{%
+            \ifthenelse{\boolean{isFirstContactItem}}{\setboolean{isFirstContactItem}{false}}{\contactSeparator}%
+            \contactItem{tel:#5}{\atsIcon{Phone: }{\faPhone*}}{#5}%
+        }%
+        \ifthenelse{\equal{#7}{}}{}{%
+            \ifthenelse{\boolean{isFirstContactItem}}{\setboolean{isFirstContactItem}{false}}{\contactSeparator}%
+            \contactItem{#6}{\atsIcon{LinkedIn: }{\faLinkedinIn}}{#7}%
+        }%
+        \ifthenelse{\equal{#9}{}}{}{%
+            \ifthenelse{\boolean{isFirstContactItem}}{\setboolean{isFirstContactItem}{false}}{\contactSeparator}%
+            \contactItem{#8}{\atsIcon{GitHub: }{\faGithub}}{#9}%
+        }%
+        % --- Commented example: Adding a custom entry like a portfolio link ---
+        % % Uncomment and modify the lines below to add a portfolio or other link
+        % \ifthenelse{\boolean{isFirstContactItem}}{\setboolean{isFirstContactItem}{false}}{\contactSeparator}%
+        % \contactItem{https://yourportfolio.com}{\atsIcon{Portfolio: }{\faGlobe}}{yourportfolio.com}%
+        % ----------------------------------------------------------------------
+    }%
+}
+
+% #1: Summary Text
+\newcommand{\cvSummary}[1]{
+    \begin{onecolentry}
+        #1
+    \end{onecolentry}
+    \vspace{0.2 cm}
+}
+
+% #1: Degree, #2: University, #3: Date, #4: Location, #5: Bullet Points
+\newcommand{\cvEducation}[5]{
+    \begin{twocolentry}{\textit{#3}}
+        \textbf{#1}
+    \end{twocolentry}
+    \begin{twocolentry}{\textit{#4}}
+        \textit{#2}
+    \end{twocolentry}
+    \vspace{0.10 cm}
+    \begin{onecolentry}
+        \begin{highlights} #5 \end{highlights}
+    \end{onecolentry}
+    \vspace{0.2 cm}
+}
+
+% #1: Category, #2: Skills List
+\newcommand{\cvSkill}[2]{
+    \begin{onecolentry}
+        \textbf{#1:} #2
+    \end{onecolentry}
+    \vspace{0.05 cm}
+}
+
+% #1: Title, #2: Tech Stack, #3: Date, #4: Subtitle/Type, #5: Bullet Points
+\newcommand{\cvProject}[5]{
+    \begin{twocolentry}{\textit{#3}}
+        \textbf{#1}
+    \end{twocolentry}
+    \begin{twocolentry}{\textit{#4}}
+        \textit{#2}
+    \end{twocolentry}
+    \vspace{0.10 cm}
+    \begin{onecolentry}
+        \begin{highlights} #5 \end{highlights}
+    \end{onecolentry}
+    \vspace{0.2 cm}
+}
+
+% #1: Title, #2: Organization, #3: Date, #4: Location, #5: Bullet Points
+\newcommand{\cvExperience}[5]{
+    \begin{twocolentry}{\textit{#3}}
+        \textbf{#1}
+    \end{twocolentry}
+    \begin{twocolentry}{\textit{#4}}
+        \textit{#2}
+    \end{twocolentry}
+    \vspace{0.10 cm}
+    \begin{onecolentry}
+        \begin{highlights} #5 \end{highlights}
+    \end{onecolentry}
+    \vspace{0.2 cm}
+}
+
+% #1: Title, #2: Authors, #3: Date, #4: Venue, #5: URL Text, #6: URL
+\newcommand{\cvPublication}[6]{
+    \begin{twocolentry}{\textit{#3}}
+        \parbox[t]{0.75\textwidth}{\textbf{#1}}
+    \end{twocolentry}
+    \vspace{0.10 cm}
+    \begin{onecolentry}
+        #2 \\
+        \textit{#4} \ifthenelse{\equal{#6}{}}{}{ | \href{#6}{#5}}
+    \end{onecolentry}
+    \vspace{0.2 cm}
+}
+
+% #1: Cert Name, #2: Issuer, #3: Date, #4: Link Text, #5: Link URL
+\newcommand{\cvCert}[5]{
+    \begin{twocolentry}{\textit{Issued #3}}
+        \textbf{#1}
+    \end{twocolentry}
+    \begin{twocolentry}{\textit{\href{#5}{#4}}}
+        \textit{#2}
+    \end{twocolentry}
+    \vspace{0.2 cm}
+}
+
+% #1: Position, #2: Date, #3: Event/Group, #4: Organization, #5: Bullet Points
+\newcommand{\cvExtracurricularActivity}[5]{
+    \begin{twocolentry}{\textit{#2}}
+        \textbf{#1}
+    \end{twocolentry}
+    \begin{twocolentry}{\textit{#4}}
+        \textit{#3}
+    \end{twocolentry}
+    \vspace{0.10 cm}
+    \begin{onecolentry}
+        \begin{highlights} #5 \end{highlights}
+    \end{onecolentry}
+    \vspace{0.2 cm}
+}
+
+% #1: Name, #2: Position, #3: Department, #4: Organization, #5: Email, #6: Phone
+\newcommand{\cvReference}[6]{
+    \begin{onecolentry}
+        \textbf{#1} \\
+        \textit{#2} \\
+        \ifthenelse{\equal{#3}{}}{}{#3 \\}#4 \\
+        \ifthenelse{\equal{#5}{}}{}{\href{mailto:#5}{#5}\ifthenelse{\equal{#6}{}}{}{\\}}%
+        \ifthenelse{\equal{#6}{}}{}{#6}
+    \end{onecolentry}
+    \vspace{0.2 cm}
+}
