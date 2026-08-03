@@ -34,9 +34,7 @@
 \definecolor{primaryColor}{RGB}{0, 79, 144}
 \RequirePackage[
     colorlinks=true,
-    urlcolor=primaryColor,
-    pdftitle={Resume},
-    pdfauthor={Mir Suhail Asarat}
+    urlcolor=primaryColor
 ]{hyperref}
 
 % Custom link command with an external arrow icon
@@ -121,6 +119,7 @@
 \newboolean{isFirstContactItem}
 % #1: Name, #2: Location URL, #3: Location Name, #4: Email, #5: Phone, #6: LinkedIn URL, #7: LinkedIn Name, #8: GitHub URL, #9: GitHub Name
 \newcommand{\resumeHeader}[9]{
+    \hypersetup{pdftitle={Resume of #1}, pdfauthor={#1}}%
     \setboolean{isFirstContactItem}{true}%
     \makeheader{#1}{%
         \ifthenelse{\equal{#3}{}}{}{%

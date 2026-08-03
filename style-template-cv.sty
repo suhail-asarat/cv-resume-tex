@@ -35,9 +35,7 @@
 \definecolor{primaryColor}{RGB}{0, 79, 144}
 \RequirePackage[
     colorlinks=true,
-    urlcolor=primaryColor,
-    pdftitle={CV},
-    pdfauthor={Your Name}
+    urlcolor=primaryColor
 ]{hyperref}
 
 % Custom link command with an external arrow icon
@@ -122,6 +120,7 @@
 \newboolean{isFirstContactItem}
 % #1: Name, #2: Location URL, #3: Location Name, #4: Email, #5: Phone, #6: LinkedIn URL, #7: LinkedIn Name, #8: GitHub URL, #9: GitHub Name
 \newcommand{\cvHeader}[9]{
+    \hypersetup{pdftitle={CV of #1}, pdfauthor={#1}}%
     \setboolean{isFirstContactItem}{true}%
     \makeheader{#1}{%
         \ifthenelse{\equal{#3}{}}{}{%
