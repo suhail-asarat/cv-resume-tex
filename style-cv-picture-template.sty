@@ -122,8 +122,9 @@
         \hfill
         \begin{minipage}[c]{3cm}
             \raggedleft
-            \ifthenelse{\equal{\cvpic}{}}{}{\includegraphics[width=3cm]{\cvpic}}
-        \end{minipage}
+            \ifthenelse{\equal{\cvpic}{}}{}{%
+                {\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{0.15pt}\color{black!35}\fbox{\includegraphics[width=\dimexpr 3cm - 0.3pt\relax]{\cvpic}}}%
+            }        \end{minipage}
     \end{cvheader}
     \vspace{0.2cm}
 }
@@ -266,7 +267,7 @@
 \newcommand{\cvReference}[6]{
     \begin{onecolentry}
         \textbf{#1} \\
-        \textit{#2} \\
+        \text{#2} \\
         \ifthenelse{\equal{#3}{}}{}{#3 \\}#4 \\
         \ifthenelse{\equal{#5}{}}{}{\href{mailto:#5}{#5}\ifthenelse{\equal{#6}{}}{}{\\}}%
         \ifthenelse{\equal{#6}{}}{}{#6}
